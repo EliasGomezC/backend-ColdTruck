@@ -1,0 +1,41 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+build/
+
+# Cachés
+.cache/
+.nyc_output/
+coverage/
+.eslintcache
+
+# TypeScript
+*.tsbuildinfo
+
+# Paquetes
+*.pack
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Config del editor
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+tmp/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*

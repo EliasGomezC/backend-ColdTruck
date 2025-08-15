@@ -603,4 +603,78 @@ router.get('/alerts/ordered', async (req, res) => {
     }
 });
 
+router.get('/ForCargoType', async (req, res) => {
+    try {
+        const result = await Trip.aggregate([
+            {
+                $lookup: {
+                    from: "cargoType",
+                    localField: "IDCargoType",
+                    foreignField: "_id",
+                    as: "cargo"
+                }
+            },
+            { $unwind: "$cargo" },
+            {
+                $group: {
+                    _id: "$cargo.name",
+                    totalTrips: { $sum: 1 }
+                }
+            }
+        ]);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: 'Error obteniendo viajes por tipo de carga' });
+    }
+});
+
+router.get('/ForRute', async (req, res) => {
+    try {
+        const result = await Trip.aggregate([
+            {
+                $lookup: {
+                    from: "rute",
+                    localField: "IDRute",
+                    foreignField: "_id",
+                    as: "route"
+                }
+            },
+            { $unwind: "$route" },
+            {
+                $group: {
+                    _id: "$route.name",
+                    totalTrips: { $sum: 1 }
+                }
+            },
+            { $sort: { totalTrips: -1 } },
+            {
+                $project: {
+                    _id: 0,
+                    NombreDeLaRuta: "$_id",
+                    totalDeViajes: "$totalTrips"
+                }
+            }
+        ]);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: 'Error obteniendo viajes por ruta' });
+    }
+});
+
+router.get('/ForStatus', async (req, res) => {
+    try {
+        const result = await Trip.aggregate([
+                {
+                    $group: {
+                        _id: "$status",
+                        total: { $sum: 1 }
+                    }
+                }
+        ]);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: 'Error obteniendo viajes por status' });
+    }
+});
+
 module.exports = router;
